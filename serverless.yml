@@ -1,0 +1,59 @@
+service: aws-bedrock-blog-service
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+          Resource:
+            - arn:aws:s3:::${self:custom.bucketName}
+            - arn:aws:s3:::${self:custom.bucketName}/*
+        - Effect: Allow
+          Action:
+            - bedrock:InvokeModel
+          Resource: "*"
+
+httpApi:
+  name: CustomBlogAPI
+  description: "Http api for generating blogs and saving file in S3"
+  cors: true
+
+functions:
+  generateBlog:
+    handler: handler.generate_blog
+    events:
+      - httpApi:
+          path: /blog
+          method: post
+    environment:
+      BUCKET_NAME: ${self:custom.bucketName}
+      BEDROCK_REGION: ${self:custom.bedrock_region}
+      MODEL_ID: ${self:custom.bedrock_model_id}
+
+  getBlog:
+    handler: handler.get_blog
+    events:
+      - httpApi:
+          path: /blog
+          method: get
+    environment:
+      BUCKET_NAME: ${self:custom.bucketName}
+
+resources:
+  Resources:
+    BlogBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucketName}
+
+custom:
+  bucketName: blog-service-bucket-dev
+  bedrock_model_id: amazon.nova-micro-v1:0
+  bedrock_region: us-east-1
