@@ -12,6 +12,7 @@ provider:
           Action:
             - s3:PutObject
             - s3:GetObject
+            - s3:ListBucket
           Resource:
             - arn:aws:s3:::${self:custom.bucketName}
             - arn:aws:s3:::${self:custom.bucketName}/*
@@ -19,11 +20,20 @@ provider:
           Action:
             - bedrock:InvokeModel
           Resource: "*"
-
-httpApi:
-  name: CustomBlogAPI
-  description: "Http api for generating blogs and saving file in S3"
-  cors: true
+  httpApi:
+    name: CustomBlogAPI
+    description: "Http api for generating blogs and saving file in S3"
+    cors:
+      allowedOrigins:
+        - http://localhost:5173    # for local React dev
+        - https://myblog.com       # production domain
+      allowedMethods:
+        - GET
+        - POST
+        - OPTIONS
+      allowedHeaders:
+        - Content-Type
+      allowCredentials: false
 
 functions:
   generateBlog:

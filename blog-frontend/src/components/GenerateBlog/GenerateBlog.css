@@ -1,0 +1,44 @@
+.generate-blog {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.generate-blog h2 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.generate-blog form {
+  display: flex;
+  gap: 8px;
+}
+
+.generate-blog input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.generate-blog button {
+  padding: 8px 12px;
+  background: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+.generate-blog button:hover {
+  background: #0056b3;
+}
+
+.result {
+  margin-top: 12px;
+  padding: 8px;
+  background: #eef;
+  border-radius: 6px;
+}
